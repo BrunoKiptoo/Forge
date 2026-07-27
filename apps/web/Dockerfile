@@ -6,7 +6,8 @@ WORKDIR /app
 
 FROM base AS builder
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +
+RUN pnpm install --frozen-lockfile
 RUN pnpm run build --filter=@forge/web
 
 FROM base AS runner
