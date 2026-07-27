@@ -1,0 +1,7 @@
+{
+  "extends": "@forge/config/tsconfig/nestjs",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "extends": "@forge/config/tsconfig/nextjs",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@forge/ui": [
+        "../../packages/ui/src"
+      ],
+      "@forge/types": [
+        "../../packages/types/src"
+      ],
+      "@forge/config/env": [
+        "../../packages/config/src/env"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
