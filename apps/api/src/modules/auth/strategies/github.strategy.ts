@@ -8,8 +8,8 @@ import { AuthService } from "../auth.service";
 export class GithubStrategy extends PassportStrategy(Strategy, "github") {
   constructor(private readonly authService: AuthService) {
     super({
-      clientID: process.env.GITHUB_CLIENT_ID ?? "github-client-id",
-      clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "github-client-secret",
+      clientID: process.env.GITHUB_CLIENT_ID || "disabled",
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || "disabled",
       callbackURL: process.env.GITHUB_CALLBACK_URL ?? "http://localhost:3001/api/auth/github/callback",
       scope: ["user:email"],
     });
