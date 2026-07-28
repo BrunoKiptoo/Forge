@@ -12,24 +12,34 @@ groups:
         data:
           - refId: A
             datasourceUid: prometheus-ds
-            model:
-              expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: A
             relativeTimeRange:
               from: 600
               to: 0
+            model:
+              expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)
+              refId: A
+              intervalMs: 1000
+              maxDataPoints: 43200
           - refId: C
             datasourceUid: __expr__
+            relativeTimeRange:
+              from: 600
+              to: 0
             model:
+              refId: C
               type: threshold
+              expression: A
               conditions:
                 - evaluator:
                     type: gt
                     params: [80]
+                  operator:
+                    type: and
                   query:
-                    params: [A]
+                    params: [C]
+                  reducer:
+                    type: last
+                  type: query
         noDataState: NoData
         execErrState: Error
         for: 2m
@@ -45,24 +55,34 @@ groups:
         data:
           - refId: A
             datasourceUid: prometheus-ds
-            model:
-              expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: A
             relativeTimeRange:
               from: 600
               to: 0
+            model:
+              expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+              refId: A
+              intervalMs: 1000
+              maxDataPoints: 43200
           - refId: C
             datasourceUid: __expr__
+            relativeTimeRange:
+              from: 600
+              to: 0
             model:
+              refId: C
               type: threshold
+              expression: A
               conditions:
                 - evaluator:
                     type: gt
                     params: [85]
+                  operator:
+                    type: and
                   query:
-                    params: [A]
+                    params: [C]
+                  reducer:
+                    type: last
+                  type: query
         noDataState: NoData
         execErrState: Error
         for: 2m
@@ -78,24 +98,34 @@ groups:
         data:
           - refId: A
             datasourceUid: prometheus-ds
-            model:
-              expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: A
             relativeTimeRange:
               from: 600
               to: 0
+            model:
+              expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100
+              refId: A
+              intervalMs: 1000
+              maxDataPoints: 43200
           - refId: C
             datasourceUid: __expr__
+            relativeTimeRange:
+              from: 600
+              to: 0
             model:
+              refId: C
               type: threshold
+              expression: A
               conditions:
                 - evaluator:
                     type: gt
                     params: [90]
+                  operator:
+                    type: and
                   query:
-                    params: [A]
+                    params: [C]
+                  reducer:
+                    type: last
+                  type: query
         noDataState: NoData
         execErrState: Error
         for: 5m
