@@ -13,12 +13,6 @@ scrape_configs:
         labels:
           server: forge-server-01
 
-  - job_name: cadvisor
-    static_configs:
-      - targets: [cadvisor:8080]
-        labels:
-          server: forge-server-01
-
   - job_name: forge-api
     static_configs:
       - targets: [178.63.72.92:3001]
