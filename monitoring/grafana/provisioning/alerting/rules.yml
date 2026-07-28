@@ -1,0 +1,94 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: forge-alerts
+    folder: Forge
+    interval: 1m
+    rules:
+      - uid: cpu-high
+        title: High CPU Usage
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [80]
+                  query:
+                    params: [A]
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "CPU usage is above 80% on forge-server-01"
+        labels:
+          alertname: HighCPU
+          severity: warning
+
+      - uid: memory-high
+        title: High Memory Usage
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [85]
+                  query:
+                    params: [A]
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "Memory usage is above 85% on forge-server-01"
+        labels:
+          alertname: HighMemory
+          severity: warning
+
+      - uid: disk-high
+        title: High Disk Usage
+        condition: C
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [90]
+                  query:
+                    params: [A]
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "Disk usage is above 90% on forge-server-01"
+        labels:
+          alertname: HighDisk
+          severity: critical
