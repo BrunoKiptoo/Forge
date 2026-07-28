@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, v0.1.0-alpha]
+
+jobs:
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/forge
+            git pull origin ${{ github.ref_name }}
+            systemctl --user start podman.socket || true
+            export DOCKER_HOST=unix:///run/user/$(id -u)/podman/podman.sock
+            docker compose up --build -d
+            docker compose ps

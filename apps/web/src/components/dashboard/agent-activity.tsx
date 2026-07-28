@@ -1,62 +1,75 @@
 "use client";
 
-import { agentActivities } from "@/lib/mock-data";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useEffect, useState, useCallback } from "react";
+import { useOrg } from "@/lib/org-context";
+import { apiFetch } from "@/lib/api";
+import { useForgeSocket } from "@/lib/use-forge-socket";
+
+interface ActivityItem {
+  _id: string; action: string; entityType: string; entityId: string;
+  metadata: Record<string, unknown>; createdAt: string;
+  userId?: { name: string; avatar?: string } | null;
+}
 
 export function AgentActivity() {
+  const { activeOrg } = useOrg();
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchActivities = useCallback(async () => {
+    if (!activeOrg) return;
+    try {
+      const res = await apiFetch<{ data: ActivityItem[] }>(`/activities?organizationId=${activeOrg._id}&limit=10`);
+      setActivities(res.data);
+    } catch { setActivities([]); }
+    finally { setLoading(false); }
+  }, [activeOrg]);
+
+  useEffect(() => { fetchActivities(); }, [fetchActivities]);
+  useForgeSocket(activeOrg ? [`org:${activeOrg._id}`] : [], { "agent.message": () => { void fetchActivities(); } });
+
   return (
-    <Card className="bg-card/40 border-border/50">
-      <CardHeader className="flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base font-semibold">Live Agent Activity</CardTitle>
-        <div className="flex items-center gap-2">
-          <span className="relative flex size-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-          </span>
-          <span className="text-xs text-muted-foreground">Live</span>
+    <div className="border border-[#1a1a1a] bg-black">
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#1a1a1a]">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-4 bg-[#F6410F]" />
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#F6410F]">Activity</span>
         </div>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="divide-y divide-border">
-          {agentActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex items-start gap-3 px-4 py-3 transition-colors hover:bg-muted/30"
-            >
-              <div
-                className={cn(
-                  "mt-0.5 rounded-lg p-1.5 shrink-0",
-                  activity.status === "running"
-                    ? "bg-amber-400/10 text-amber-400 animate-pulse"
-                    : "bg-primary/10 text-primary",
-                )}
-              >
-                <activity.icon className="size-3.5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium">{activity.action}</p>
-                <p className="text-xs text-muted-foreground truncate font-mono mt-0.5">{activity.detail}</p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <Badge
-                  variant={activity.status === "running" ? "secondary" : "outline"}
-                  className={cn(
-                    "text-[10px] h-5 px-1.5 font-mono",
-                    activity.status === "running" && "bg-amber-400/10 text-amber-400 border-amber-400/20",
-                  )}
-                >
-                  {activity.status}
-                </Badge>
-                <span className="text-[10px] text-muted-foreground font-mono w-14 text-right">
-                  {activity.timestamp}
+        <span className="text-[10px] text-[#888888] tracking-[0.1em] uppercase">{activities.length} events</span>
+      </div>
+
+      <div className="p-4">
+        {loading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-8 bg-[#0a0a0a] border border-[#1a1a1a] animate-pulse" />
+            ))}
+          </div>
+        ) : activities.length === 0 ? (
+          <p className="text-xs text-[#888888] text-center py-6 tracking-wide">No recent activity</p>
+        ) : (
+          <div className="space-y-0 divide-y divide-[#0f0f0f]">
+            {activities.map((item, i) => (
+              <div key={item._id} className="flex items-center gap-4 py-2.5">
+                <span className="text-[10px] font-bold text-[#F6410F] w-5 shrink-0 tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-white truncate">
+                    <span className="text-[#a0a0a0]">{item.userId?.name ?? "System"}</span>
+                    {" — "}
+                    {item.action.replace(/\./g, " ")}
+                  </p>
+                </div>
+                <span className="text-[10px] text-[#888888] shrink-0 tabular-nums">
+                  {new Date(item.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

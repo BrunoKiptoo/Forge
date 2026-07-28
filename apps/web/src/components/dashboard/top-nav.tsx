@@ -1,31 +1,49 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Bell, Plus, Search } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 
-export function TopNav() {
+export function TopNav({ onTaskCreated }: { onTaskCreated?: () => void }) {
+  const { user } = useAuth();
+  const [taskOpen, setTaskOpen] = useState(false);
+  const initials = user ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "??";
+
   return (
-    <header className="flex h-14 items-center gap-4 border-b border-border bg-card/50 px-4 lg:px-6">
-      <div className="relative flex-1 max-w-md">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search projects, tasks, or agents..."
-          className="h-9 pl-9 bg-muted/50 border-border/50 focus:bg-card text-sm"
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <button className="relative rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-          <Bell className="size-4" />
-          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-primary" />
-        </button>
-        <div className="hidden sm:flex items-center gap-2 rounded-xl px-2 py-1.5 transition-colors hover:bg-muted cursor-pointer">
-          <Avatar size="sm">
-            <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">ZA</AvatarFallback>
-          </Avatar>
+    <>
+      <header className="flex h-14 items-center gap-4 border-b border-[#1a1a1a] bg-black px-4 lg:px-6 shrink-0">
+        {/* Search */}
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#888888]" />
+          <input
+            placeholder="Search tasks, projects..."
+            className="w-full h-8 bg-[#0a0a0a] border border-[#1a1a1a] text-xs text-white pl-8 pr-3 outline-none placeholder:text-[#666666] focus:border-[#F6410F]/30 transition-colors"
+          />
         </div>
-      </div>
-    </header>
+
+        <div className="flex items-center gap-3 ml-auto">
+          <button
+            onClick={() => setTaskOpen(true)}
+            className="flex items-center gap-2 bg-[#F6410F] text-white text-xs font-semibold tracking-[0.08em] uppercase px-4 py-2 hover:bg-[#d93a0d] transition-all"
+          >
+            <Plus className="size-3.5" />
+            New Task
+          </button>
+          <button className="text-[#888888] hover:text-white transition-colors p-1.5">
+            <Bell className="size-4" />
+          </button>
+          <div className="size-7 bg-[#F6410F]/10 border border-[#F6410F]/20 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-[#F6410F]">{initials}</span>
+          </div>
+        </div>
+      </header>
+
+      <CreateTaskDialog
+        open={taskOpen}
+        onOpenChange={setTaskOpen}
+        onCreated={() => { setTaskOpen(false); onTaskCreated?.(); }}
+      />
+    </>
   );
 }

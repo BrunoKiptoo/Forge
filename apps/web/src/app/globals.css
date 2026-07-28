@@ -36,6 +36,8 @@
   --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
   --animate-slide-up: slide-up 0.5s ease-out;
   --animate-fade-in: fade-in 0.3s ease-out;
+  --animate-shimmer: shimmer 4s linear infinite;
+  --animate-scan: scan 8s linear infinite;
 }
 
 @keyframes float {
@@ -44,8 +46,18 @@
 }
 
 @keyframes pulse-slow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }
 
 @keyframes slide-up {
@@ -59,39 +71,50 @@
 }
 
 :root {
-  --background: oklch(0.096 0.004 276);
-  --foreground: oklch(0.973 0.002 276);
-  --card: oklch(0.115 0.005 276);
-  --card-foreground: oklch(0.973 0.002 276);
-  --popover: oklch(0.115 0.005 276);
-  --popover-foreground: oklch(0.973 0.002 276);
-  --primary: oklch(0.623 0.214 259.815);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.185 0.01 276);
-  --secondary-foreground: oklch(0.95 0.005 276);
-  --muted: oklch(0.155 0.008 276);
-  --muted-foreground: oklch(0.656 0.015 276);
-  --accent: oklch(0.485 0.180 284);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.21 0.01 276);
-  --input: oklch(0.21 0.01 276);
-  --ring: oklch(0.623 0.214 259.815);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.08 0.005 276);
-  --sidebar-foreground: oklch(0.85 0.01 276);
-  --sidebar-primary: oklch(0.623 0.214 259.815);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.14 0.008 276);
-  --sidebar-accent-foreground: oklch(0.92 0.005 276);
-  --sidebar-border: oklch(0.15 0.008 276);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  /* Pure black foundation — Tesla/Apple aesthetic */
+  --background: #000000;
+  --foreground: #f5f5f5;
+  --card: #0a0a0a;
+  --card-foreground: #f5f5f5;
+  --popover: #0f0f0f;
+  --popover-foreground: #f5f5f5;
+  /* Forge orange #F6410F as primary */
+  --primary: #F6410F;
+  --primary-foreground: #ffffff;
+  --secondary: #141414;
+  --secondary-foreground: #e0e0e0;
+  --muted: #111111;
+  --muted-foreground: #a0a0a0;
+  /* Warm amber accent — analogous to orange */
+  --accent: #c43a0d;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1f1f1f;
+  --input: #1a1a1a;
+  --ring: #F6410F;
+  --radius: 0.25rem;
+  --sidebar: #050505;
+  --sidebar-foreground: #d8d8d8;
+  --sidebar-primary: #F6410F;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #111111;
+  --sidebar-accent-foreground: #f0f0f0;
+  --sidebar-border: #161616;
+  --sidebar-ring: #F6410F;
 }
 
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #0a0a0a inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff;
 }
 
 body {
@@ -111,6 +134,15 @@ body {
 
 .bg-glow {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, oklch(0.485 0.18 284 / 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 50% 120%, oklch(0.623 0.214 259.815 / 0.1), transparent);
+    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(246,65,15,0.12), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 110%, rgba(246,65,15,0.06), transparent);
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg, #f5f5f5 0%, #F6410F 40%, #ff8c5a 60%, #f5f5f5 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
 }
