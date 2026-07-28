@@ -28,6 +28,6 @@ export class ApprovalRepository {
   }
 
   update(id: string, data: Partial<Approval>) {
-    return this.model.findByIdAndUpdate(id, { $set: data }, { new: true }).lean().exec();
+    return this.model.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }).lean().exec();
   }
 }

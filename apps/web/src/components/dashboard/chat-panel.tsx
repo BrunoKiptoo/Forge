@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Bot } from "lucide-react";
 import { useOrg } from "@/lib/org-context";
 import { apiFetch } from "@/lib/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface Agent {
@@ -16,22 +12,21 @@ interface Agent {
   provider: string;
   model: string;
   status: string;
-  currentTaskId?: string | null;
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  planner: "bg-purple-500/20 text-purple-400",
-  backend: "bg-blue-500/20 text-blue-400",
-  frontend: "bg-cyan-500/20 text-cyan-400",
-  testing: "bg-emerald-500/20 text-emerald-400",
-  reviewer: "bg-amber-500/20 text-amber-400",
-  deployment: "bg-pink-500/20 text-pink-400",
+  planner: "text-purple-400",
+  backend: "text-blue-400",
+  frontend: "text-cyan-400",
+  testing: "text-emerald-400",
+  reviewer: "text-amber-400",
+  deployment: "text-pink-400",
 };
 
-const STATUS_COLORS: Record<string, string> = {
+const STATUS_DOT: Record<string, string> = {
   idle: "bg-emerald-500",
   busy: "bg-amber-500",
-  offline: "bg-muted-foreground",
+  offline: "bg-[#444]",
   error: "bg-red-500",
 };
 
@@ -43,9 +38,7 @@ export function ChatPanel() {
   const fetchAgents = useCallback(async () => {
     if (!activeOrg) return;
     try {
-      const res = await apiFetch<{ data: Agent[] }>(
-        `/agents?organizationId=${activeOrg._id}`,
-      );
+      const res = await apiFetch<{ data: Agent[] }>(`/agents?organizationId=${activeOrg._id}`);
       setAgents(res.data);
     } catch {
       setAgents([]);
@@ -60,62 +53,42 @@ export function ChatPanel() {
     return () => clearInterval(interval);
   }, [fetchAgents]);
 
+  const runningCount = agents.filter((a) => a.status === "busy").length;
+
   return (
-    <Card className="bg-card/40 border-border/50 flex flex-col h-[400px]">
-      <CardHeader className="flex-row items-center justify-between pb-2 shrink-0">
-        <CardTitle className="text-base font-semibold">Agents</CardTitle>
-        <span className="text-xs text-muted-foreground font-mono">
-          {agents.length} running
-        </span>
-      </CardHeader>
-      <CardContent className="flex-1 p-0 min-h-0">
-        <ScrollArea className="h-full px-4">
-          <div className="space-y-2 py-2">
-            {loading
-              ? Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-lg p-3 animate-pulse">
-                    <div className="size-8 rounded-full bg-muted" />
-                    <div className="flex-1 space-y-1">
-                      <div className="h-4 w-20 bg-muted rounded" />
-                      <div className="h-3 w-32 bg-muted rounded" />
-                    </div>
-                  </div>
-                ))
-              : agents.map((agent) => (
-                  <div
-                    key={agent._id}
-                    className="flex items-center gap-3 rounded-lg border border-border/50 p-3 transition hover:bg-muted/30"
-                  >
-                    <div className="relative">
-                      <div
-                        className={cn(
-                          "flex size-8 items-center justify-center rounded-full",
-                          TYPE_COLORS[agent.type] ?? "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        <Bot className="size-4" />
-                      </div>
-                      <div
-                        className={cn(
-                          "absolute -bottom-0.5 -right-0.5 size-3 rounded-full border-2 border-card",
-                          STATUS_COLORS[agent.status] ?? "bg-muted-foreground",
-                        )}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{agent.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {agent.type} · {agent.model}
-                      </p>
-                    </div>
-                    <Badge variant={agent.status === "busy" ? "default" : "outline"} className="text-[10px]">
-                      {agent.status}
-                    </Badge>
-                  </div>
-                ))}
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+    <div className="border border-[#1a1a1a] bg-black">
+      <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#1a1a1a]">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-4 bg-[#F6410F]" />
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#F6410F]">Agents</span>
+        </div>
+        <span className="text-[10px] text-[#888888] tracking-[0.1em] uppercase">{runningCount} running</span>
+      </div>
+
+      <div className="p-4 space-y-0 divide-y divide-[#0f0f0f]">
+        {loading ? (
+          [1, 2, 3].map((i) => (
+            <div key={i} className="h-8 bg-[#0a0a0a] border border-[#1a1a1a] animate-pulse mb-2" />
+          ))
+        ) : agents.length === 0 ? (
+          <p className="text-xs text-[#888888] text-center py-6 tracking-wide">No agents found</p>
+        ) : (
+          agents.map((agent) => (
+            <div key={agent._id} className="flex items-center gap-3 py-2.5">
+              <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", STATUS_DOT[agent.status] ?? "bg-[#444]")} />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-white truncate">
+                  <span className={cn("font-medium", TYPE_COLORS[agent.type] ?? "text-[#a0a0a0]")}>
+                    {agent.name}
+                  </span>
+                  <span className="text-[#888888]"> · {agent.type}</span>
+                </p>
+              </div>
+              <span className="text-[10px] text-[#888888] shrink-0 tracking-wide">{agent.status}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }

@@ -26,8 +26,8 @@ export class AnalyticsService {
 
     for (const plan of plans) {
       for (const step of plan.steps) {
-        const r = step.result as Record<string, unknown>;
-        if (!r.provider) continue;
+        const r = (step.result ?? {}) as Record<string, unknown>;
+        if (!r?.provider) continue;
         const prompt = Number(r.promptTokens ?? 0);
         const completion = Number(r.completionTokens ?? 0);
         const cost = Number(r.estimatedCost ?? 0);

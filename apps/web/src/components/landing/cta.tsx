@@ -22,7 +22,7 @@ export function CTA() {
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-[-0.03em] text-white">
               Four steps.<br />
-              <span className="text-[#3a3a3a]">Zero friction.</span>
+              <span className="text-[#707070]">Zero friction.</span>
             </h2>
           </div>
 
@@ -45,7 +45,7 @@ export function CTA() {
               >
                 <div className="text-[#F6410F] text-xs font-bold tracking-[0.2em] mb-5 sm:mb-6">{n}</div>
                 <div className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-3 tracking-tight">{title}</div>
-                <div className="text-xs sm:text-sm text-[#4a4a4a] leading-relaxed">{body}</div>
+                <div className="text-xs sm:text-sm text-[#888888] leading-relaxed">{body}</div>
               </div>
             ))}
           </div>
@@ -69,10 +69,10 @@ export function CTA() {
 
           <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-[-0.04em] text-white leading-[0.95] mb-6 sm:mb-8">
             Build something<br />
-            <span className="text-[#3a3a3a]">remarkable.</span>
+            <span className="text-[#707070]">remarkable.</span>
           </h2>
 
-          <p className="text-[#4a4a4a] text-sm sm:text-base max-w-sm sm:max-w-md mx-auto mb-10 sm:mb-14 leading-relaxed">
+          <p className="text-[#a0a0a0] text-sm sm:text-base max-w-sm sm:max-w-md mx-auto mb-10 sm:mb-14 leading-relaxed">
             Join engineering teams already using Forge to ship faster, with fewer errors, and less overhead.
           </p>
 
@@ -88,7 +88,7 @@ export function CTA() {
             </Link>
             <Link
               href="/login"
-              className="text-xs sm:text-sm font-medium tracking-[0.08em] uppercase text-[#4a4a4a] border-b border-[#2a2a2a] pb-0.5 transition-all duration-300 hover:text-white hover:border-[#F6410F]"
+              className="text-xs sm:text-sm font-medium tracking-[0.08em] uppercase text-[#a0a0a0] border-b border-[#2a2a2a] pb-0.5 transition-all duration-300 hover:text-white hover:border-[#F6410F]"
             >
               Sign In
             </Link>

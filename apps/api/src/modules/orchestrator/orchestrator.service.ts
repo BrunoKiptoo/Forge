@@ -52,7 +52,12 @@ export class OrchestratorService {
     await this.planRepository.update(String(plan._id), { status: "running" } as Record<string, unknown>);
     await this.activityRepository.create({
       organizationId, action: "orchestration.started", entityType: "execution_plan",
-      entityId: String(plan._id), metadata: { taskId, steps: plan.steps.length, repoFullName, ...costMeta },
+      entityId: String(plan._id), metadata: {
+        taskId, steps: plan.steps.length, repoFullName,
+        ...costMeta,
+        provider: costMeta.provider || this.aiService.getProvider().name,
+        model: costMeta.model || this.aiService.getProvider().defaultModel,
+      },
     });
 
     void this.executeSteps(plan, organizationId, taskId, taskTitle, taskDescription, repoFullName);
@@ -140,7 +145,11 @@ export class OrchestratorService {
         await this.planRepository.updateStepStatus(String(plan._id), step.order, "completed", {
           output: response.content.slice(0, 200), filesCount: artifacts.length,
           citedFiles,
-          ...CostTracker.createMetadata(agent.provider, agent.model, response),
+          ...CostTracker.createMetadata(
+            agent.provider || this.aiService.getProvider().name,
+            agent.model || this.aiService.getProvider().defaultModel,
+            response,
+          ),
         });
 
         // After testing agent — run real tests in sandbox

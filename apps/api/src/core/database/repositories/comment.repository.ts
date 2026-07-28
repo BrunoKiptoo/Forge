@@ -25,7 +25,7 @@ export class CommentRepository {
   }
 
   update(id: string, data: Partial<Comment>) {
-    return this.model.findByIdAndUpdate(id, { $set: data }, { new: true }).lean().exec();
+    return this.model.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }).lean().exec();
   }
 
   delete(id: string) {

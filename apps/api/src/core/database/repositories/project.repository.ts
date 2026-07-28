@@ -57,7 +57,7 @@ export class ProjectRepository extends BaseRepository<ProjectDocument> {
         .findOneAndUpdate(
           { _id: projectId, deletedAt: null },
           { $pull: { favoritedBy: userId } },
-          { new: true },
+          { returnDocument: 'after' },
         )
         .exec();
     } else {
@@ -65,7 +65,7 @@ export class ProjectRepository extends BaseRepository<ProjectDocument> {
         .findOneAndUpdate(
           { _id: projectId, deletedAt: null },
           { $addToSet: { favoritedBy: userId } },
-          { new: true },
+          { returnDocument: 'after' },
         )
         .exec();
     }

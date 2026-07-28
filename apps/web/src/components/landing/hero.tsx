@@ -82,7 +82,7 @@ export function Hero() {
           <span className="block text-[clamp(3.5rem,18vw,11rem)] text-white">
             FORGE
           </span>
-          <span className="block text-[clamp(0.75rem,3.5vw,2.5rem)] font-light tracking-[0.12em] sm:tracking-[0.15em] uppercase mt-3 sm:mt-4 text-[#9a9a9a]">
+          <span className="block text-[clamp(0.75rem,3.5vw,2.5rem)] font-light tracking-[0.12em] sm:tracking-[0.15em] uppercase mt-3 sm:mt-4 text-[#b0b0b0]">
             AI Software Engineering
           </span>
         </h1>
@@ -95,7 +95,7 @@ export function Hero() {
         </div>
 
         {/* Descriptor */}
-        <p className="max-w-sm sm:max-w-lg text-[#6b6b6b] text-sm sm:text-base leading-relaxed font-light tracking-wide px-2 sm:px-0">
+        <p className="max-w-sm sm:max-w-lg text-[#a0a0a0] text-sm sm:text-base leading-relaxed font-light tracking-wide px-2 sm:px-0">
           Describe a task. A team of specialized agents plans, codes,
           tests, and deploys — autonomously.
         </p>
@@ -113,7 +113,7 @@ export function Hero() {
           </Link>
           <Link
             href="#features"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium tracking-[0.08em] uppercase text-[#6b6b6b] border-b border-[#2a2a2a] pb-0.5 transition-all duration-300 hover:text-white hover:border-[#F6410F]"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium tracking-[0.08em] uppercase text-[#a0a0a0] border-b border-[#2a2a2a] pb-0.5 transition-all duration-300 hover:text-white hover:border-[#F6410F]"
           >
             See How It Works
           </Link>
@@ -131,7 +131,7 @@ export function Hero() {
               className={`px-3 sm:px-8 py-5 sm:py-6 text-center ${i < 2 ? "border-r border-[#1a1a1a]" : ""}`}
             >
               <div className="text-xl sm:text-2xl font-bold text-white tracking-tight">{stat.value}</div>
-              <div className="mt-1 text-[9px] sm:text-xs text-[#4a4a4a] tracking-[0.1em] sm:tracking-[0.12em] uppercase">{stat.label}</div>
+              <div className="mt-1 text-[9px] sm:text-xs text-[#888888] tracking-[0.1em] sm:tracking-[0.12em] uppercase">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -139,7 +139,7 @@ export function Hero() {
 
       {/* Scroll indicator — hide on short screens */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 opacity-40">
-        <span className="text-[10px] tracking-[0.2em] uppercase text-[#6b6b6b]">Scroll</span>
+        <span className="text-[10px] tracking-[0.2em] uppercase text-[#a0a0a0]">Scroll</span>
         <div className="w-px h-8 bg-gradient-to-b from-[#6b6b6b] to-transparent" />
       </div>
     </section>

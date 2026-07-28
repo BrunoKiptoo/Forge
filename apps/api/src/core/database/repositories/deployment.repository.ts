@@ -32,7 +32,7 @@ export class DeploymentRepository {
   }
 
   update(id: string, data: Record<string, unknown>) {
-    return this.model.findByIdAndUpdate(id, data, { new: true }).lean().exec();
+    return this.model.findByIdAndUpdate(id, data, { returnDocument: 'after' }).lean().exec();
   }
 
   appendLog(id: string, line: string) {

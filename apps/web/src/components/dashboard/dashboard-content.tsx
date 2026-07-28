@@ -28,7 +28,7 @@ export function DashboardContent() {
               <span className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#F6410F]">Overview</span>
             </div>
             <h1 className="text-2xl font-bold tracking-[-0.03em] text-white">Dashboard</h1>
-            <p className="text-sm text-[#4a4a4a] mt-1">Monitor your AI agents and project activity.</p>
+            <p className="text-sm text-[#a0a0a0] mt-1">Monitor your AI agents and project activity.</p>
           </div>
 
           <StatsCards />

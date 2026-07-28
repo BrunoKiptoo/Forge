@@ -23,7 +23,7 @@ export abstract class BaseRepository<T extends { deletedAt: Date | null }> {
 
   async update(id: string, data: UpdateQuery<T>): Promise<T | null> {
     return this.model
-      .findOneAndUpdate({ _id: id, deletedAt: null }, data, { new: true })
+      .findOneAndUpdate({ _id: id, deletedAt: null }, data, { returnDocument: 'after' })
       .exec();
   }
 
@@ -32,7 +32,7 @@ export abstract class BaseRepository<T extends { deletedAt: Date | null }> {
       .findOneAndUpdate(
         { _id: id, deletedAt: null },
         { deletedAt: new Date() } as unknown as UpdateQuery<T>,
-        { new: true },
+        { returnDocument: 'after' },
       )
       .exec();
   }
@@ -40,7 +40,7 @@ export abstract class BaseRepository<T extends { deletedAt: Date | null }> {
   async restore(id: string): Promise<T | null> {
     return this.model
       .findOneAndUpdate({ _id: id }, { deletedAt: null } as unknown as UpdateQuery<T>, {
-        new: true,
+        returnDocument: 'after',
       })
       .exec();
   }

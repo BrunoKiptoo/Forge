@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -38,19 +38,23 @@ export function CreateOrgDialog({
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm<CreateOrgForm>({
     resolver: zodResolver(createOrgSchema),
   });
 
   const nameValue = watch("name");
+  const slugValue = watch("slug");
 
-  const generateSlug = () => {
-    const slug = (nameValue ?? "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-    return slug;
-  };
+  const generateSlug = (name: string) =>
+    name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  useEffect(() => {
+    const suggested = generateSlug(nameValue ?? "");
+    if (!slugValue || slugValue === generateSlug(nameValue?.slice(0, -1) ?? "")) {
+      setValue("slug", suggested, { shouldValidate: !!suggested });
+    }
+  }, [nameValue]);
 
   async function onSubmit(data: CreateOrgForm) {
     setError(null);
@@ -100,7 +104,7 @@ export function CreateOrgDialog({
               {...register("slug")}
             />
             <p className="text-xs text-muted-foreground">
-              Suggested: {generateSlug() || "my-organization"}
+              Suggested: {generateSlug(nameValue ?? "") || "my-organization"}
             </p>
             {errors.slug && (
               <p className="text-sm text-destructive">{errors.slug.message}</p>

@@ -11,8 +11,8 @@ interface LogLine { text: string; type: "stdout" | "stderr" | "system" | "input"
 function lineColor(line: LogLine) {
   if (line.type === "input") return "text-[#F6410F]";
   if (line.text.startsWith("[stderr]")) return "text-red-400";
-  if (line.text.startsWith("[system]")) return "text-[#6b6b6b]";
-  return "text-[#c0c0c0]";
+  if (line.text.startsWith("[system]")) return "text-[#a0a0a0]";
+  return "text-[#e0e0e0]";
 }
 
 export function TerminalPanel({ workspaceId }: { workspaceId?: string }) {
@@ -89,7 +89,7 @@ export function TerminalPanel({ workspaceId }: { workspaceId?: string }) {
           <div className="flex items-center gap-1">
             {sessions.slice(0, 3).map((s) => (
               <button key={s._id} onClick={() => setLines([{ text: `$ ${s.command}`, type: "input" }, ...s.logs.map((l) => ({ text: l, type: (l.startsWith("[stderr]") ? "stderr" : l.startsWith("[system]") ? "system" : "stdout") as LogLine["type"] }))])}
-                className="flex items-center gap-1 px-2 py-0.5 text-[9px] border border-[#1a1a1a] hover:border-[#F6410F]/30 transition text-[#4a4a4a] hover:text-white"
+                className="flex items-center gap-1 px-2 py-0.5 text-[9px] border border-[#1a1a1a] hover:border-[#F6410F]/30 transition text-[#a0a0a0] hover:text-white"
                 title={s.command}
               >
                 {s.status === "completed" ? <CheckCircle className="size-2.5 text-white" /> : s.status === "failed" ? <XCircle className="size-2.5 text-red-400" /> : <Clock className="size-2.5 text-[#F6410F]" />}
@@ -118,12 +118,12 @@ export function TerminalPanel({ workspaceId }: { workspaceId?: string }) {
           onKeyDown={handleKeyDown}
           placeholder={running ? "running..." : "enter command"}
           disabled={running}
-          className="flex-1 bg-transparent text-xs font-mono text-white outline-none placeholder:text-[#2a2a2a] disabled:opacity-50"
+          className="flex-1 bg-transparent text-xs font-mono text-white outline-none placeholder:text-[#666666] disabled:opacity-50"
         />
         <button
           disabled={running || !input.trim()}
           onClick={() => { const cmd = input.trim(); setInput(""); void runCommand(cmd); }}
-          className="text-[#3a3a3a] hover:text-[#F6410F] transition disabled:opacity-30"
+          className="text-[#888888] hover:text-[#F6410F] transition disabled:opacity-30"
         >
           <Send className="size-3.5" />
         </button>

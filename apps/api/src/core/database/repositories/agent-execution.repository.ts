@@ -17,7 +17,7 @@ export class AgentExecutionRepository {
   }
 
   async update(id: string, data: Record<string, unknown>): Promise<AgentExecutionDocument | null> {
-    return this.model.findOneAndUpdate({ _id: id, deletedAt: null }, data, { new: true }).exec();
+    return this.model.findOneAndUpdate({ _id: id, deletedAt: null }, data, { returnDocument: 'after' }).exec();
   }
 
   async findByOrg(organizationId: string, limit = 20): Promise<AgentExecutionDocument[]> {

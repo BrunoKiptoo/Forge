@@ -12,7 +12,7 @@ export class BrowserSessionRepository {
   }
 
   update(id: string, data: Partial<BrowserSession>) {
-    return this.model.findByIdAndUpdate(id, { $set: data }, { new: true }).lean().exec();
+    return this.model.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }).lean().exec();
   }
 
   appendAction(id: string, action: Record<string, unknown>) {

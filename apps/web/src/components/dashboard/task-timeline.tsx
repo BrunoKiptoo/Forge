@@ -14,24 +14,26 @@ interface TaskItem {
   _id: string; title: string; status: string; priority: string;
   projectId: string; assignedAgent?: string | null; updatedAt: string;
 }
+interface PlanProgress { completed: number; total: number; currentStep: string | null; }
+
 interface ApprovalItem {
   _id: string; status: string; note: string | null;
   planSnapshot: Record<string, unknown>; createdAt: string;
 }
 
 const STATUS_COLOR: Record<string, string> = {
-  planning: "text-[#6b6b6b] border-[#2a2a2a]",
-  queued: "text-[#6b6b6b] border-[#2a2a2a]",
+  planning: "text-[#a0a0a0] border-[#444444]",
+  queued: "text-[#a0a0a0] border-[#444444]",
   running: "text-[#F6410F] border-[#F6410F]/30",
-  waiting: "text-[#6b6b6b] border-[#2a2a2a]",
+  waiting: "text-[#a0a0a0] border-[#444444]",
   review: "text-amber-400 border-amber-400/30",
-  completed: "text-white border-[#3a3a3a]",
+  completed: "text-white border-[#555555]",
   failed: "text-red-400 border-red-400/30",
-  cancelled: "text-[#3a3a3a] border-[#2a2a2a]",
+  cancelled: "text-[#888888] border-[#444444]",
 };
 
 const PRIORITY_COLOR: Record<string, string> = {
-  low: "text-[#3a3a3a]", medium: "text-[#6b6b6b]", high: "text-amber-400", critical: "text-red-400",
+  low: "text-[#888888]", medium: "text-[#a0a0a0]", high: "text-amber-400", critical: "text-red-400",
 };
 
 export function TaskTimeline({ onSelectTask, refreshKey }: {
@@ -48,6 +50,7 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [taskApprovals, setTaskApprovals] = useState<Record<string, ApprovalItem | null>>({});
   const [resolvingApproval, setResolvingApproval] = useState<string | null>(null);
+  const [taskProgress, setTaskProgress] = useState<Record<string, PlanProgress>>({});
 
   const fetchTasks = useCallback(async () => {
     if (!activeOrg) return;
@@ -72,8 +75,27 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
     });
   }, [tasks]);
 
+  const fetchProgress = useCallback(async (taskId: string) => {
+    try {
+      const res = await apiFetch<{ data: { steps: { status: string; agentType: string }[] } | null }>(`/agents/${taskId}/plans`);
+      const steps = res.data?.steps ?? [];
+      if (!steps.length) return;
+      const completed = steps.filter((s) => s.status === "completed").length;
+      const running = steps.find((s) => s.status === "running");
+      setTaskProgress((p) => ({ ...p, [taskId]: { completed, total: steps.length, currentStep: running?.agentType ?? null } }));
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    const running = tasks.filter((t) => t.status === "running");
+    running.forEach((t) => { void fetchProgress(t._id); });
+    if (!running.length) return;
+    const interval = setInterval(() => running.forEach((t) => { void fetchProgress(t._id); }), 3000);
+    return () => clearInterval(interval);
+  }, [tasks, fetchProgress]);
+
   useForgeSocket(activeOrg ? [`org:${activeOrg._id}`] : [], {
-    "task.updated": () => { void fetchTasks(); },
+    "task.updated": (data) => { void fetchTasks(); const d = data as { taskId?: string }; if (d.taskId) void fetchProgress(d.taskId); },
     "approval.updated": () => { void fetchTasks(); },
     "comment.created": (data) => {
       const d = data as { entityId: string };
@@ -128,7 +150,7 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
             <span className="h-px w-4 bg-[#F6410F]" />
             <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#F6410F]">Tasks</span>
           </div>
-          <span className="text-[10px] text-[#3a3a3a] tracking-[0.1em] uppercase">{tasks.length} total</span>
+          <span className="text-[10px] text-[#888888] tracking-[0.1em] uppercase">{tasks.length} total</span>
         </div>
 
         <div className="p-4">
@@ -137,7 +159,7 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
               {[1, 2, 3].map((i) => <div key={i} className="h-12 bg-[#0a0a0a] border border-[#1a1a1a] animate-pulse" />)}
             </div>
           ) : tasks.length === 0 ? (
-            <p className="text-xs text-[#3a3a3a] text-center py-8 tracking-wide">No tasks yet. Use &ldquo;New Task&rdquo; to create one.</p>
+            <p className="text-xs text-[#888888] text-center py-8 tracking-wide">No tasks yet. Use &ldquo;New Task&rdquo; to create one.</p>
           ) : (
             <div className="space-y-0 divide-y divide-[#0f0f0f]">
               {tasks.map((task, i) => {
@@ -153,7 +175,7 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
                       onClick={() => onSelectTask?.(task._id, task.title)}
                     >
                       {/* Index */}
-                      <span className="text-[10px] font-bold text-[#2a2a2a] w-5 shrink-0 tabular-nums">
+                      <span className="text-[10px] font-bold text-[#666666] w-5 shrink-0 tabular-nums">
                         {String(i + 1).padStart(2, "0")}
                       </span>
 
@@ -167,14 +189,35 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
                           <span className={`text-[9px] tracking-[0.1em] uppercase ${PRIORITY_COLOR[task.priority] ?? "text-[#3a3a3a]"}`}>
                             {task.priority}
                           </span>
+                          {task.status === "running" && taskProgress[task._id] && (() => {
+                            const p = taskProgress[task._id];
+                            const pct = Math.round((p.completed / p.total) * 100);
+                            return (
+                              <span className="text-[9px] text-[#888888] tracking-wide">
+                                {p.currentStep ? `${p.currentStep}…` : `${pct}%`}
+                              </span>
+                            );
+                          })()}
                         </div>
+                        {task.status === "running" && taskProgress[task._id] && (() => {
+                          const p = taskProgress[task._id];
+                          const pct = (p.completed / p.total) * 100;
+                          return (
+                            <div className="mt-1.5 h-0.5 w-full bg-[#1a1a1a] overflow-hidden">
+                              <div
+                                className="h-full bg-[#F6410F] transition-all duration-500"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                          );
+                        })()}
                       </div>
 
                       {/* Actions */}
                       <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={(e) => { e.stopPropagation(); setExpandedTask(isExpanded ? null : task._id); }}
-                          className="flex items-center gap-1 text-[10px] text-[#3a3a3a] hover:text-white transition px-2 py-1"
+                          className="flex items-center gap-1 text-[10px] text-[#888888] hover:text-white transition px-2 py-1"
                         >
                           <MessageSquare className="size-3" />
                           {commentCount > 0 && <span>{commentCount}</span>}
@@ -182,7 +225,7 @@ export function TaskTimeline({ onSelectTask, refreshKey }: {
 
                         {(task.status === "planning" || task.status === "queued") && (
                           <button
-                            className="text-[10px] text-[#4a4a4a] hover:text-amber-400 transition px-2 py-1 flex items-center gap-1"
+                            className="text-[10px] text-[#a0a0a0] hover:text-amber-400 transition px-2 py-1 flex items-center gap-1"
                             onClick={(e) => void handleRequestApproval(e, task)}
                           >
                             <Clock className="size-3" /> Review

@@ -15,10 +15,10 @@ export function TopNav({ onTaskCreated }: { onTaskCreated?: () => void }) {
       <header className="flex h-14 items-center gap-4 border-b border-[#1a1a1a] bg-black px-4 lg:px-6 shrink-0">
         {/* Search */}
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#3a3a3a]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#888888]" />
           <input
             placeholder="Search tasks, projects..."
-            className="w-full h-8 bg-[#0a0a0a] border border-[#1a1a1a] text-xs text-white pl-8 pr-3 outline-none placeholder:text-[#3a3a3a] focus:border-[#F6410F]/30 transition-colors"
+            className="w-full h-8 bg-[#0a0a0a] border border-[#1a1a1a] text-xs text-white pl-8 pr-3 outline-none placeholder:text-[#666666] focus:border-[#F6410F]/30 transition-colors"
           />
         </div>
 
@@ -30,7 +30,7 @@ export function TopNav({ onTaskCreated }: { onTaskCreated?: () => void }) {
             <Plus className="size-3.5" />
             New Task
           </button>
-          <button className="text-[#3a3a3a] hover:text-white transition-colors p-1.5">
+          <button className="text-[#888888] hover:text-white transition-colors p-1.5">
             <Bell className="size-4" />
           </button>
           <div className="size-7 bg-[#F6410F]/10 border border-[#F6410F]/20 flex items-center justify-center">

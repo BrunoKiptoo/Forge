@@ -6,7 +6,6 @@ import { apiFetch } from "@/lib/api";
 import { useOrg } from "@/lib/org-context";
 import { CostChart } from "@/components/analytics/cost-chart";
 import { AgentPerformanceChart } from "@/components/analytics/agent-performance-chart";
-import { Sidebar, MobileSidebar } from "@/components/dashboard/sidebar";
 import { TopNav } from "@/components/dashboard/top-nav";
 
 interface Summary {
@@ -23,7 +22,7 @@ function Panel({ title, icon, children }: { title: string; icon: React.ReactNode
       <div className="flex items-center gap-3 px-5 py-3.5 border-b border-[#1a1a1a]">
         <span className="h-px w-4 bg-[#F6410F]" />
         <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#F6410F]">{title}</span>
-        <span className="text-[#3a3a3a] ml-auto">{icon}</span>
+        <span className="text-[#888888] ml-auto">{icon}</span>
       </div>
       <div className="p-5">{children}</div>
     </div>
@@ -63,90 +62,86 @@ export default function AnalyticsPage() {
   ] : [];
 
   return (
-    <div className="flex h-screen bg-black overflow-hidden">
-      <Sidebar />
-      <MobileSidebar />
-      <div className="flex flex-1 flex-col min-w-0">
-        <TopNav />
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 lg:p-6 space-y-6 max-w-[1400px] mx-auto">
+    <div className="flex flex-1 flex-col min-h-0">
+      <TopNav />
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4 lg:p-6 space-y-6 max-w-[1400px] mx-auto">
 
-            {/* Header */}
+          {/* Header */}
             <div className="border-b border-[#1a1a1a] pb-6 pt-2">
               <div className="flex items-center gap-3 mb-3">
                 <span className="h-px w-5 bg-[#F6410F]" />
                 <span className="text-[10px] font-medium tracking-[0.25em] uppercase text-[#F6410F]">Observability</span>
               </div>
               <h1 className="text-2xl font-bold tracking-[-0.03em] text-white">Analytics</h1>
-              <p className="text-sm text-[#4a4a4a] mt-1">Token usage, cost, agent performance, and failure diagnostics.</p>
+              <p className="text-sm text-[#a0a0a0] mt-1">Token usage, cost, agent performance, and failure diagnostics.</p>
             </div>
 
-            {/* Summary cards */}
-            <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-4 border border-[#1a1a1a]">
-              {loading
-                ? [1, 2, 3, 4].map((i) => <div key={i} className="h-20 bg-[#0a0a0a] border-r border-[#1a1a1a] animate-pulse last:border-r-0" />)
-                : summaryCards.map((card, i) => (
-                  <div key={card.label} className={`p-5 bg-black ${i < 3 ? "border-r border-[#1a1a1a]" : ""}`}>
-                    <div className="text-2xl font-bold tracking-tight" style={{ color: card.accent }}>{card.value}</div>
-                    <div className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#4a4a4a] mt-1.5">{card.label}</div>
-                    <div className="text-[10px] text-[#3a3a3a] mt-0.5">{card.sub}</div>
-                  </div>
-                ))
-              }
-            </div>
-
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Panel title="Cost & Tokens — 14 Days" icon={<TrendingUp className="size-3.5" />}>
-                {loading ? <div className="h-[220px] bg-[#0a0a0a] animate-pulse" /> : <CostChart data={costData} />}
-              </Panel>
-              <Panel title="Agent Success Rate" icon={<CheckCircle className="size-3.5" />}>
-                {loading ? <div className="h-[220px] bg-[#0a0a0a] animate-pulse" /> : <AgentPerformanceChart data={agentData} />}
-              </Panel>
-            </div>
-
-            {/* Provider breakdown */}
-            {summary && summary.tokenUsage.byProvider.length > 0 && (
-              <Panel title="Provider Breakdown" icon={<Zap className="size-3.5" />}>
-                <div className="divide-y divide-[#0f0f0f]">
-                  {summary.tokenUsage.byProvider.map((p) => (
-                    <div key={p.provider} className="flex items-center justify-between py-3">
-                      <div className="flex items-center gap-4">
-                        <span className="text-[10px] font-semibold tracking-[0.15em] uppercase border border-[#2a2a2a] px-2 py-0.5 text-[#6b6b6b]">{p.provider}</span>
-                        <span className="text-xs text-[#4a4a4a]">{p.calls} calls</span>
-                      </div>
-                      <div className="flex items-center gap-6 text-xs">
-                        <span className="text-[#6b6b6b]">{p.tokens.toLocaleString()} tokens</span>
-                        <span className="font-semibold text-white">${p.cost.toFixed(4)}</span>
-                      </div>
-                    </div>
-                  ))}
+          {/* Summary cards */}
+          <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-4 border border-[#1a1a1a]">
+            {loading
+              ? [1, 2, 3, 4].map((i) => <div key={i} className="h-20 bg-[#0a0a0a] border-r border-[#1a1a1a] animate-pulse last:border-r-0" />)
+              : summaryCards.map((card, i) => (
+                <div key={card.label} className={`p-5 bg-black ${i < 3 ? "border-r border-[#1a1a1a]" : ""}`}>
+                  <div className="text-2xl font-bold tracking-tight" style={{ color: card.accent }}>{card.value}</div>
+                  <div className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888888] mt-1.5">{card.label}</div>
+                  <div className="text-[10px] text-[#888888] mt-0.5">{card.sub}</div>
                 </div>
-              </Panel>
-            )}
+              ))
+            }
+          </div>
 
-            {/* Failures */}
-            <Panel title="Failure Diagnostics" icon={<AlertCircle className="size-3.5 text-red-400" />}>
-              {loading ? (
-                <div className="h-32 bg-[#0a0a0a] animate-pulse" />
-              ) : failures.length === 0 ? (
-                <p className="text-xs text-[#3a3a3a] text-center py-8 tracking-wide">No failures recorded.</p>
-              ) : (
-                <div className="divide-y divide-[#0f0f0f]">
-                  {failures.map((f) => (
-                    <div key={f.id} className="py-3 flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-mono text-[#4a4a4a]">task: {f.taskId}</p>
-                        <p className="text-xs text-red-400 mt-0.5 truncate">{String(f.error)}</p>
-                      </div>
-                      <p className="text-[10px] text-[#3a3a3a] shrink-0 tabular-nums">
-                        {new Date(f.startedAt).toLocaleString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Panel title="Cost & Tokens — 14 Days" icon={<TrendingUp className="size-3.5" />}>
+              {loading ? <div className="h-[220px] bg-[#0a0a0a] animate-pulse" /> : <CostChart data={costData} />}
+            </Panel>
+            <Panel title="Agent Success Rate" icon={<CheckCircle className="size-3.5" />}>
+              {loading ? <div className="h-[220px] bg-[#0a0a0a] animate-pulse" /> : <AgentPerformanceChart data={agentData} />}
             </Panel>
           </div>
+
+          {/* Provider breakdown */}
+          {summary && summary.tokenUsage.byProvider.length > 0 && (
+            <Panel title="Provider Breakdown" icon={<Zap className="size-3.5" />}>
+              <div className="divide-y divide-[#0f0f0f]">
+                {summary.tokenUsage.byProvider.map((p) => (
+                  <div key={p.provider} className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-4">
+                      <span className="text-[10px] font-semibold tracking-[0.15em] uppercase border border-[#444444] px-2 py-0.5 text-[#a0a0a0]">{p.provider}</span>
+                      <span className="text-xs text-[#888888]">{p.calls} calls</span>
+                    </div>
+                    <div className="flex items-center gap-6 text-xs">
+                      <span className="text-[#a0a0a0]">{p.tokens.toLocaleString()} tokens</span>
+                      <span className="font-semibold text-white">${p.cost.toFixed(4)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Panel>
+          )}
+
+          {/* Failures */}
+          <Panel title="Failure Diagnostics" icon={<AlertCircle className="size-3.5 text-red-400" />}>
+            {loading ? (
+              <div className="h-32 bg-[#0a0a0a] animate-pulse" />
+            ) : failures.length === 0 ? (
+              <p className="text-xs text-[#888888] text-center py-8 tracking-wide">No failures recorded.</p>
+            ) : (
+              <div className="divide-y divide-[#0f0f0f]">
+                {failures.map((f) => (
+                  <div key={f.id} className="py-3 flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-mono text-[#a0a0a0]">task: {f.taskId}</p>
+                      <p className="text-xs text-red-400 mt-0.5 truncate">{String(f.error)}</p>
+                    </div>
+                    <p className="text-[10px] text-[#888888] shrink-0 tabular-nums">
+                      {new Date(f.startedAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </Panel>
         </div>
       </div>
     </div>

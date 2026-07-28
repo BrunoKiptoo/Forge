@@ -17,7 +17,7 @@ interface RealProject {
 }
 
 const STATUS_DOT: Record<string, string> = {
-  active: "bg-[#F6410F]", draft: "bg-[#4a4a4a]", paused: "bg-[#3a3a3a]", archived: "bg-[#2a2a2a]",
+  active: "bg-[#F6410F]", draft: "bg-[#888888]", paused: "bg-[#666666]", archived: "bg-[#444444]",
 };
 
 const navLinks = [
@@ -61,7 +61,7 @@ export function Sidebar() {
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className={cn("text-[#4a4a4a] hover:text-white transition-colors", collapsed && "mx-auto")}
+            className={cn("text-[#888888] hover:text-white transition-colors", collapsed && "mx-auto")}
           >
             {collapsed ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
           </button>
@@ -71,7 +71,7 @@ export function Sidebar() {
           {/* Nav */}
           <div className="px-3 space-y-0.5">
             {!collapsed && (
-              <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#3a3a3a] px-3 mb-2">Navigation</p>
+              <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#888888] px-3 mb-2">Navigation</p>
             )}
             {navLinks.map(({ href, icon: Icon, label }) => (
               <Link
@@ -79,7 +79,7 @@ export function Sidebar() {
                 href={href}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2 text-xs font-medium tracking-wide transition-all",
-                  "text-[#4a4a4a] hover:text-white hover:bg-[#0f0f0f]",
+                  "text-[#c0c0c0] hover:text-white hover:bg-[#0f0f0f]",
                   collapsed && "justify-center",
                 )}
               >
@@ -92,7 +92,7 @@ export function Sidebar() {
           {/* Org switcher */}
           {!collapsed && (
             <div className="px-3 border-t border-[#1a1a1a] pt-4">
-              <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#3a3a3a] px-3 mb-2">Organization</p>
+              <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#888888] px-3 mb-2">Organization</p>
               <OrganizationSwitcher />
             </div>
           )}
@@ -101,17 +101,17 @@ export function Sidebar() {
           {!collapsed && (
             <div className="px-3 border-t border-[#1a1a1a] pt-4">
               <div className="flex items-center justify-between px-3 mb-2">
-                <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#3a3a3a]">Projects</p>
-                <button onClick={() => setCreateOpen(true)} className="text-[#3a3a3a] hover:text-[#F6410F] transition-colors">
+                <p className="text-[9px] font-semibold tracking-[0.2em] uppercase text-[#888888]">Projects</p>
+                <button onClick={() => setCreateOpen(true)} className="text-[#888888] hover:text-[#F6410F] transition-colors">
                   <Plus className="size-3.5" />
                 </button>
               </div>
               {realProjects.length === 0 ? (
-                <p className="text-[10px] text-[#3a3a3a] px-3 py-2">No projects yet.</p>
+                <p className="text-[10px] text-[#888888] px-3 py-2">No projects yet.</p>
               ) : (
                 <div className="space-y-0.5">
                   {realProjects.map((p) => (
-                    <div key={p._id} className="flex items-center gap-2.5 px-3 py-2 text-xs text-[#4a4a4a] hover:text-white hover:bg-[#0f0f0f] transition-all cursor-pointer">
+                    <div key={p._id} className="flex items-center gap-2.5 px-3 py-2 text-xs text-[#c0c0c0] hover:text-white hover:bg-[#0f0f0f] transition-all cursor-pointer">
                       <Folder className="size-3.5 shrink-0" />
                       <span className="truncate flex-1">{p.name}</span>
                       <div className={cn("size-1.5 rounded-full shrink-0", STATUS_DOT[p.status] ?? "bg-[#2a2a2a]")} />
@@ -133,16 +133,16 @@ export function Sidebar() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-white truncate">{user?.name ?? "..."}</p>
-                  <p className="text-[10px] text-[#4a4a4a] truncate">{user?.email ?? ""}</p>
+                  <p className="text-[10px] text-[#888888] truncate">{user?.email ?? ""}</p>
                 </div>
               </div>
               <div className="hidden group-hover:flex flex-col absolute bottom-full left-0 right-0 bg-[#0a0a0a] border border-[#1f1f1f] mb-1">
-                <Link href="#" className="flex items-center gap-2 px-4 py-2.5 text-xs text-[#6b6b6b] hover:text-white hover:bg-[#111] transition-all">
+                <Link href="#" className="flex items-center gap-2 px-4 py-2.5 text-xs text-[#c0c0c0] hover:text-white hover:bg-[#111] transition-all">
                   <Settings className="size-3.5" /> Settings
                 </Link>
                 <button
                   onClick={async () => { await logout(); window.location.href = "/"; }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-xs text-[#6b6b6b] hover:text-[#F6410F] hover:bg-[#111] transition-all text-left"
+                  className="flex items-center gap-2 px-4 py-2.5 text-xs text-[#c0c0c0] hover:text-[#F6410F] hover:bg-[#111] transition-all text-left"
                 >
                   <LogOut className="size-3.5" /> Sign out
                 </button>
@@ -184,14 +184,14 @@ export function MobileSidebar() {
                 <img src="/images/forge_official_logo.png" alt="Forge" className="h-6 w-auto object-contain" />
                 <span className="text-sm font-bold tracking-[0.12em] uppercase text-white">Forge</span>
               </Link>
-              <button onClick={() => setOpen(false)} className="text-[#4a4a4a] hover:text-white transition-colors">
+              <button onClick={() => setOpen(false)} className="text-[#888888] hover:text-white transition-colors">
                 <ChevronLeft className="size-4" />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
               {navLinks.map(({ href, icon: Icon, label }) => (
                 <Link key={href} href={href} onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 text-xs font-medium tracking-wide text-[#4a4a4a] hover:text-white hover:bg-[#0f0f0f] transition-all"
+                  className="flex items-center gap-3 px-3 py-2.5 text-xs font-medium tracking-wide text-[#c0c0c0] hover:text-white hover:bg-[#0f0f0f] transition-all"
                 >
                   <Icon className="size-4" /> {label}
                 </Link>
@@ -204,10 +204,10 @@ export function MobileSidebar() {
                 </div>
                 <div>
                   <p className="text-xs font-medium text-white">{user?.name}</p>
-                  <p className="text-[10px] text-[#4a4a4a]">{user?.email}</p>
+                  <p className="text-[10px] text-[#888888]">{user?.email}</p>
                 </div>
               </div>
-              <button onClick={async () => { await logout(); window.location.href = "/"; }} className="text-[#4a4a4a] hover:text-[#F6410F] transition-colors">
+              <button onClick={async () => { await logout(); window.location.href = "/"; }} className="text-[#888888] hover:text-[#F6410F] transition-colors">
                 <LogOut className="size-4" />
               </button>
             </div>

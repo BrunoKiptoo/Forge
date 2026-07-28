@@ -16,7 +16,7 @@ export function Footer() {
             <span key={item} className="flex items-center gap-5 sm:gap-6">
               <Link
                 href="#"
-                className="text-[10px] sm:text-xs tracking-[0.12em] uppercase text-[#4a4a4a] transition-colors hover:text-white"
+                className="text-[10px] sm:text-xs tracking-[0.12em] uppercase text-[#888888] transition-colors hover:text-white"
               >
                 {item}
               </Link>
@@ -26,7 +26,7 @@ export function Footer() {
         </nav>
 
         {/* Copyright — visible grey, not near-black */}
-        <p className="text-[10px] sm:text-xs text-[#3a3a3a] tracking-[0.1em] shrink-0">
+        <p className="text-[10px] sm:text-xs text-[#707070] tracking-[0.1em] shrink-0">
           &copy; {new Date().getFullYear()} FORGE
         </p>
       </div>

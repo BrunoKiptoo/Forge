@@ -42,7 +42,7 @@ export class PlannerService {
       steps = this.fallbackSteps(taskTitle, taskDescription);
     }
 
-    const plan = await this.planRepository.create({
+    const plan = await this.planRepository.upsertByTaskId(taskId, {
       taskId,
       steps,
       status: "pending",

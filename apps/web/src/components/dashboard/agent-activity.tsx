@@ -36,7 +36,7 @@ export function AgentActivity() {
           <span className="h-px w-4 bg-[#F6410F]" />
           <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#F6410F]">Activity</span>
         </div>
-        <span className="text-[10px] text-[#3a3a3a] tracking-[0.1em] uppercase">{activities.length} events</span>
+        <span className="text-[10px] text-[#888888] tracking-[0.1em] uppercase">{activities.length} events</span>
       </div>
 
       <div className="p-4">
@@ -47,7 +47,7 @@ export function AgentActivity() {
             ))}
           </div>
         ) : activities.length === 0 ? (
-          <p className="text-xs text-[#3a3a3a] text-center py-6 tracking-wide">No recent activity</p>
+          <p className="text-xs text-[#888888] text-center py-6 tracking-wide">No recent activity</p>
         ) : (
           <div className="space-y-0 divide-y divide-[#0f0f0f]">
             {activities.map((item, i) => (
@@ -57,12 +57,12 @@ export function AgentActivity() {
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-white truncate">
-                    <span className="text-[#6b6b6b]">{item.userId?.name ?? "System"}</span>
+                    <span className="text-[#a0a0a0]">{item.userId?.name ?? "System"}</span>
                     {" — "}
                     {item.action.replace(/\./g, " ")}
                   </p>
                 </div>
-                <span className="text-[10px] text-[#3a3a3a] shrink-0 tabular-nums">
+                <span className="text-[10px] text-[#888888] shrink-0 tabular-nums">
                   {new Date(item.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
               </div>

@@ -24,7 +24,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 const inputClass =
   "w-full bg-[#0a0a0a] border border-[#1f1f1f] text-white text-sm px-4 py-3 outline-none placeholder:text-[#3a3a3a] focus:border-[#F6410F]/50 transition-colors [&:-webkit-autofill]:![background-color:#0a0a0a] [&:-webkit-autofill]:[box-shadow:0_0_0_1000px_#0a0a0a_inset] [&:-webkit-autofill]:[-webkit-text-fill-color:#ffffff]";
 
-const labelClass = "text-xs font-medium tracking-[0.1em] uppercase text-[#6b6b6b]";
+const labelClass = "text-xs font-medium tracking-[0.1em] uppercase text-[#a0a0a0]";
 
 export function RegisterForm({ className }: { className?: string }) {
   const { register: registerUser } = useAuth();

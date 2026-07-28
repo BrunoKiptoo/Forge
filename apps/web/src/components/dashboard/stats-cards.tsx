@@ -28,7 +28,7 @@ export function StatsCards() {
     { label: "Running", value: stats?.running ?? "—", accent: "#F6410F" },
     { label: "Completed Today", value: stats?.completedToday ?? "—", accent: "#ffffff" },
     { label: "Failed", value: stats?.failed ?? "—", accent: "#ef4444" },
-    { label: "Total Tasks", value: stats?.total ?? "—", accent: "#4a4a4a" },
+    { label: "Total Tasks", value: stats?.total ?? "—", accent: "#a0a0a0" },
   ];
 
   return (
@@ -41,7 +41,7 @@ export function StatsCards() {
           <div className="text-2xl font-bold tracking-tight" style={{ color: card.accent }}>
             {stats === null ? <span className="text-[#2a2a2a]">—</span> : card.value}
           </div>
-          <div className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#4a4a4a] mt-1.5">{card.label}</div>
+          <div className="text-[10px] font-medium tracking-[0.15em] uppercase text-[#888888] mt-1.5">{card.label}</div>
         </div>
       ))}
     </div>

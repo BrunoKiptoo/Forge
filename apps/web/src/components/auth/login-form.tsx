@@ -39,7 +39,7 @@ export function LoginForm({ className }: { className?: string }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={cn("flex flex-col gap-5", className)}>
       <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-xs font-medium tracking-[0.1em] uppercase text-[#6b6b6b]">
+        <label htmlFor="email" className="text-xs font-medium tracking-[0.1em] uppercase text-[#a0a0a0]">
           Email
         </label>
         <input
@@ -54,10 +54,10 @@ export function LoginForm({ className }: { className?: string }) {
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <label htmlFor="password" className="text-xs font-medium tracking-[0.1em] uppercase text-[#6b6b6b]">
+          <label htmlFor="password" className="text-xs font-medium tracking-[0.1em] uppercase text-[#a0a0a0]">
             Password
           </label>
-          <a href="/forgot-password" className="text-xs text-[#4a4a4a] hover:text-[#F6410F] transition-colors">
+          <a href="/forgot-password" className="text-xs text-[#888888] hover:text-[#F6410F] transition-colors">
             Forgot password?
           </a>
         </div>

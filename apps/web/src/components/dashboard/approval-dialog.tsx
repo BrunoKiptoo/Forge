@@ -2,9 +2,6 @@
 
 import { useState } from "react";
 import { CheckCircle, Loader2, AlertTriangle, DollarSign, FileCode, ListChecks } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PlanStep {
   order: number;
@@ -59,108 +56,112 @@ export function ApprovalDialog({
 
   const { plan, costMeta, taskTitle } = payload;
   const totalCostEstimate = costMeta.estimatedCost * plan.steps.length;
+  const filePatterns = plan.steps
+    .flatMap((s) => AGENT_FILES[s.agentType] ?? ["src/**/*"])
+    .filter((v, i, a) => a.indexOf(v) === i);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60" onClick={onCancel} />
-      <div className="relative z-50 w-full max-w-lg rounded-xl border border-border bg-card shadow-xl flex flex-col max-h-[90vh]">
+      <div className="relative z-50 w-full max-w-2xl border border-[#1f1f1f] bg-black shadow-xl">
+
         {/* Header */}
-        <div className="flex items-start gap-3 p-5 border-b border-border shrink-0">
-          <AlertTriangle className="size-5 text-amber-400 mt-0.5 shrink-0" />
-          <div>
-            <h2 className="text-base font-semibold">Review Execution Plan</h2>
-            <p className="text-sm text-muted-foreground mt-0.5 truncate max-w-sm">{taskTitle}</p>
+        <div className="flex items-center gap-2.5 px-4 py-3 border-b border-[#1a1a1a]">
+          <AlertTriangle className="size-3.5 text-amber-400 shrink-0" />
+          <div className="min-w-0">
+            <h2 className="text-xs font-semibold tracking-wide">Review Execution Plan</h2>
+            <p className="text-[11px] text-[#888888] truncate">{taskTitle}</p>
           </div>
         </div>
 
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="p-5 space-y-5">
-            {/* Steps */}
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <ListChecks className="size-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Execution Plan ({plan.steps.length} steps)</span>
-              </div>
-              <div className="space-y-2">
-                {plan.steps.map((step) => (
-                  <div key={step.order} className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/20 p-3">
-                    <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary mt-0.5">
-                      {step.order + 1}
+        {/* Body — two columns */}
+        <div className="grid grid-cols-2 gap-0 divide-x divide-[#1a1a1a]">
+
+          {/* Left — steps */}
+          <div className="p-4">
+            <div className="flex items-center gap-1.5 mb-2">
+              <ListChecks className="size-3 text-[#888888]" />
+              <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-[#888888]">
+                Plan ({plan.steps.length} steps)
+              </span>
+            </div>
+            <div className="space-y-1 max-h-[280px] overflow-y-auto pr-1">
+              {plan.steps.map((step) => (
+                <div key={step.order} className="flex items-start gap-2 border border-[#1a1a1a] bg-[#080808] px-2.5 py-2">
+                  <span className="flex size-3.5 shrink-0 items-center justify-center bg-[#F6410F]/10 text-[8px] font-bold text-[#F6410F] mt-0.5">
+                    {step.order + 1}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] leading-snug text-[#d0d0d0] break-words">{step.description}</p>
+                    <span className="inline-block mt-1 text-[9px] font-semibold tracking-[0.12em] uppercase border border-[#2a2a2a] px-1.5 py-0.5 text-[#888888]">
+                      {step.agentType}
                     </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm leading-snug">{step.description}</p>
-                      <Badge variant="outline" className="mt-1.5 text-[10px]">{step.agentType}</Badge>
-                    </div>
                   </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Files to change */}
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <FileCode className="size-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Files to Change</span>
-              </div>
-              <div className="rounded-lg border border-border/60 bg-muted/20 p-3 space-y-1.5">
-                {plan.steps.flatMap((step) => AGENT_FILES[step.agentType] ?? ["src/**/*"]).filter((v, i, a) => a.indexOf(v) === i).map((pattern) => (
-                  <p key={pattern} className="font-mono text-xs text-muted-foreground">{pattern}</p>
-                ))}
-              </div>
-            </section>
-
-            {/* Diff preview */}
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <FileCode className="size-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Diff Preview</span>
-              </div>
-              <div className="rounded-lg border border-border/60 bg-black/30 p-3 font-mono text-[11px] text-muted-foreground space-y-0.5">
-                <p className="text-green-400/70">+ Files will be generated by AI agents after approval</p>
-                <p className="text-muted-foreground/50">+ Artifacts are stored and reviewable before any git push</p>
-                <p className="text-muted-foreground/50">+ Use &quot;Push to GitHub&quot; in the Artifact Panel to push when ready</p>
-              </div>
-            </section>
-
-            {/* Cost estimate */}
-            <section>
-              <div className="flex items-center gap-2 mb-3">
-                <DollarSign className="size-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Estimated Cost</span>
-              </div>
-              <div className="rounded-lg border border-border/60 bg-muted/20 p-3 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Provider / Model</span>
-                  <span className="font-mono">{costMeta.provider} / {costMeta.model}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Planning tokens</span>
-                  <span className="font-mono">{costMeta.totalTokens.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Est. execution tokens</span>
-                  <span className="font-mono">~{(costMeta.totalTokens * plan.steps.length).toLocaleString()}</span>
-                </div>
-                <div className="border-t border-border/60 pt-2 flex justify-between text-sm font-semibold">
-                  <span>Estimated total cost</span>
-                  <span className="text-primary">${totalCostEstimate.toFixed(4)}</span>
-                </div>
-              </div>
-            </section>
+              ))}
+            </div>
           </div>
-        </ScrollArea>
 
-        {/* Actions */}
-        <div className="flex gap-3 p-5 border-t border-border shrink-0">
-          <Button variant="outline" className="flex-1" onClick={onCancel} disabled={approving}>
+          {/* Right — files + cost */}
+          <div className="p-4 space-y-4">
+            <div>
+              <div className="flex items-center gap-1.5 mb-2">
+                <FileCode className="size-3 text-[#888888]" />
+                <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-[#888888]">Files</span>
+              </div>
+              <div className="border border-[#1a1a1a] bg-[#080808] p-2.5 space-y-1">
+                {filePatterns.map((p) => (
+                  <p key={p} className="font-mono text-[10px] text-[#888888]">{p}</p>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-1.5 mb-2">
+                <DollarSign className="size-3 text-[#888888]" />
+                <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-[#888888]">Cost Estimate</span>
+              </div>
+              <div className="border border-[#1a1a1a] bg-[#080808] p-2.5 space-y-1.5">
+                <div className="flex justify-between">
+                  <span className="text-[11px] text-[#888888]">Provider</span>
+                  <span className="font-mono text-[11px] text-[#d0d0d0]">{costMeta.provider} / {costMeta.model}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[11px] text-[#888888]">Planning tokens</span>
+                  <span className="font-mono text-[11px] text-[#d0d0d0]">{costMeta.totalTokens.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[11px] text-[#888888]">Est. execution</span>
+                  <span className="font-mono text-[11px] text-[#d0d0d0]">~{(costMeta.totalTokens * plan.steps.length).toLocaleString()}</span>
+                </div>
+                <div className="border-t border-[#1a1a1a] pt-1.5 flex justify-between">
+                  <span className="text-[11px] font-semibold">Total est.</span>
+                  <span className="text-[11px] font-semibold text-[#F6410F]">${totalCostEstimate.toFixed(4)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions — always visible */}
+        <div className="flex gap-2 px-4 py-3 border-t border-[#1a1a1a]">
+          <button
+            className="flex-1 text-[11px] font-semibold tracking-[0.08em] uppercase border border-[#2a2a2a] text-[#888888] py-2.5 hover:text-white hover:border-[#444444] transition disabled:opacity-50"
+            onClick={onCancel}
+            disabled={approving}
+          >
             Cancel
-          </Button>
-          <Button className="flex-1" onClick={handleApprove} disabled={approving}>
+          </button>
+          <button
+            className="flex-1 text-[11px] font-semibold tracking-[0.08em] uppercase bg-[#F6410F] text-white py-2.5 hover:bg-[#d93a0d] transition disabled:opacity-50 flex items-center justify-center gap-2"
+            onClick={handleApprove}
+            disabled={approving}
+          >
             {approving
-              ? <><Loader2 className="size-4 animate-spin mr-2" />Starting...</>
-              : <><CheckCircle className="size-4 mr-2" />Approve &amp; Execute</>
+              ? <><Loader2 className="size-3 animate-spin" />Starting...</>
+              : <><CheckCircle className="size-3" />Approve &amp; Execute</>
             }
-          </Button>
+          </button>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export class EnvironmentRepository {
   }
 
   update(id: string, data: Partial<Environment>) {
-    return this.model.findByIdAndUpdate(id, { $set: data }, { new: true }).lean().exec();
+    return this.model.findByIdAndUpdate(id, { $set: data }, { returnDocument: 'after' }).lean().exec();
   }
 
   deleteByWorkspace(workspaceId: string) {

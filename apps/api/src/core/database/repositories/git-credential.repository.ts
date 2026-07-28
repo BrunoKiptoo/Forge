@@ -11,7 +11,7 @@ export class GitCredentialRepository {
   async save(userId: string, token: string, provider = "github", username = ""): Promise<GitCredentialDocument> {
     const existing = await this.model.findOne({ userId }).exec();
     if (existing) {
-      return this.model.findOneAndUpdate({ userId }, { token, provider, username }, { new: true }).exec() as Promise<GitCredentialDocument>;
+      return this.model.findOneAndUpdate({ userId }, { token, provider, username }, { returnDocument: 'after' }).exec() as Promise<GitCredentialDocument>;
     }
     return this.model.create({ userId, token, provider, username });
   }

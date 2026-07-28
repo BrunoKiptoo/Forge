@@ -30,7 +30,7 @@ export class AgentRepository {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const update: any = { status };
     if (currentTaskId !== undefined) update.currentTaskId = currentTaskId;
-    return this.model.findOneAndUpdate({ _id: id, deletedAt: null }, update, { new: true }).exec();
+    return this.model.findOneAndUpdate({ _id: id, deletedAt: null }, update, { returnDocument: 'after' }).exec();
   }
 
   async findAvailable(organizationId: string, agentType: string): Promise<AgentDocument | null> {

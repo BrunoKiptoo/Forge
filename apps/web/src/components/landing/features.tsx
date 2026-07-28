@@ -76,7 +76,7 @@ export function Features() {
               Built for the<br />
               <span className="text-[#3a3a3a]">entire workflow.</span>
             </h2>
-            <p className="lg:max-w-xs text-sm text-[#4a4a4a] leading-relaxed lg:text-right">
+            <p className="lg:max-w-xs text-sm text-[#888888] leading-relaxed lg:text-right">
               From first prompt to merged pull request — every step handled by purpose-built agents.
             </p>
           </div>
@@ -94,11 +94,11 @@ export function Features() {
 
               <div className="flex items-start justify-between mb-5 sm:mb-6">
                 <span className="text-[#F6410F] text-xs font-bold tracking-[0.2em]">{number}</span>
-                <Icon className="size-4 text-[#2a2a2a] group-hover:text-[#F6410F]/40 transition-colors duration-300" />
+                <Icon className="size-4 text-[#555555] group-hover:text-[#F6410F]/40 transition-colors duration-300" />
               </div>
 
               <h3 className="text-sm sm:text-base font-semibold text-white mb-2 sm:mb-3 tracking-tight">{title}</h3>
-              <p className="text-xs sm:text-sm text-[#4a4a4a] leading-relaxed group-hover:text-[#6b6b6b] transition-colors duration-300">
+              <p className="text-xs sm:text-sm text-[#888888] leading-relaxed group-hover:text-[#a0a0a0] transition-colors duration-300">
                 {description}
               </p>
             </div>

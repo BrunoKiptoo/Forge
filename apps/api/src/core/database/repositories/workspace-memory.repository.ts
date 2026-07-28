@@ -21,7 +21,7 @@ export class WorkspaceMemoryRepository extends BaseRepository<WorkspaceMemoryDoc
     return this.model.findOneAndUpdate(
       { workspaceId, key, deletedAt: null },
       { workspaceId, organizationId, category, key, value, metadata: metadata ?? {} },
-      { upsert: true, new: true },
+      { upsert: true, returnDocument: 'after' },
     ).exec();
   }
 }

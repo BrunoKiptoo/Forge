@@ -84,7 +84,7 @@
   --secondary: #141414;
   --secondary-foreground: #e0e0e0;
   --muted: #111111;
-  --muted-foreground: #6b6b6b;
+  --muted-foreground: #a0a0a0;
   /* Warm amber accent — analogous to orange */
   --accent: #c43a0d;
   --accent-foreground: #ffffff;
@@ -95,11 +95,11 @@
   --ring: #F6410F;
   --radius: 0.25rem;
   --sidebar: #050505;
-  --sidebar-foreground: #c0c0c0;
+  --sidebar-foreground: #d8d8d8;
   --sidebar-primary: #F6410F;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #111111;
-  --sidebar-accent-foreground: #e0e0e0;
+  --sidebar-accent-foreground: #f0f0f0;
   --sidebar-border: #161616;
   --sidebar-ring: #F6410F;
 }

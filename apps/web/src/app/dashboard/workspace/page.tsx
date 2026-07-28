@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { TopNav } from "@/components/dashboard/top-nav";
 
 interface Workspace {
   _id: string;
@@ -58,6 +59,7 @@ export default function WorkspacesPage() {
 
   return (
     <div className="flex flex-1 flex-col min-h-0">
+      <TopNav />
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 lg:p-6 space-y-6 max-w-4xl mx-auto">
           <div className="flex items-center justify-between">
