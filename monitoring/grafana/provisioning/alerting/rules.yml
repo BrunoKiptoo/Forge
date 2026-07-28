@@ -16,6 +16,10 @@ groups:
               expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100)
               intervalMs: 1000
               maxDataPoints: 43200
+              refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
           - refId: C
             datasourceUid: __expr__
             model:
@@ -45,6 +49,10 @@ groups:
               expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
               intervalMs: 1000
               maxDataPoints: 43200
+              refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
           - refId: C
             datasourceUid: __expr__
             model:
@@ -74,6 +82,10 @@ groups:
               expr: (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100
               intervalMs: 1000
               maxDataPoints: 43200
+              refId: A
+            relativeTimeRange:
+              from: 600
+              to: 0
           - refId: C
             datasourceUid: __expr__
             model:
